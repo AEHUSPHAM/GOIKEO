@@ -1,49 +1,80 @@
-import React, {useEffect} from "react";
-import {Container} from "react-bootstrap";
-import {Box, Button, DatePicker, Input} from "zmp-ui";
+import React from "react";
+import {Box, Button, Input, Page} from "zmp-ui";
 import {useForm} from "react-hook-form";
-import {MatchRegister} from "./useSendRegister";
-import {deDE, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
+import useSendRegister, {MatchRegister} from "./useSendRegister";
+import {LocalizationProvider, MobileTimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import 'dayjs/locale/vi';
+
+const submit = async (data: MatchRegister) => {
+    try {
+        await postUpdateWelcomeMessage(data);
+        alert("success");
+    } finally {
+    }
+};
 
 const RegisterForm: React.FC = () => {
     const form = useForm<MatchRegister>()
-    useEffect(() => {
-
-    })
-    return <Container>
+    const mutation = useSendRegister();
+    return <Page className={"section-container"}
+    >
         <div style={{textAlign: "center"}}>
             <h1>Hi</h1>
         </div>
         <div style={{maxWidth: "30rem", justifyContent: "center", marginInline: "auto"}}>
-            {/*<FormControl {...form.register("name")}/>*/}
             <Box>
-                <Input placeholder={"hello"}
-                       onChange={(e) => form.setValue("name", e.target.value)} label={"Tên kèo"}
-                       helperText={"Tên kèo nhé bạn"} clearable/>
+                <Input
+                    onChange={(e) => form.setValue("name", e.target.value)}
+                    label={"Tên kèo"}
+                    helperText={"Tên kèo nhé bạn"} clearable/>
             </Box>
             <Box mt={6}>
-                <DatePicker
-                    label="Ngày giờ"
-                    helperText="Ngày giờ gặp nhau nhé"
-                    mask
-                    maskClosable
-                    dateFormat="dd/mm/yyyy"
-                    title="DatePicker"
-                />
                 <LocalizationProvider
                     dateAdapter={AdapterDayjs}
-                    localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
+                    adapterLocale="vi"
                 >
-                    <TimePicker/>
-                </LocalizationProvider>;
+                    <MobileTimePicker onChange={value => {
+                        console.log(value["$H"]);
+                        console.log(value["$m"]);
+                    }}/>
+                </LocalizationProvider>
             </Box>
-            <Button onClick={event => {
-                let values = form.getValues();
-                console.log(values)
-            }}>click</Button>
+            <Box mt={6}>
+                <Input helperText={"Địa điểm gặp nhau"}
+                       label={"Địa điểm"}
+                       onChange={(e) => form.setValue("location", e.target.value)}
+                />
+            </Box>
+            <Box mt={6}>
+                <Input type={"number"}
+                       label={"Số người"}
+                       helperText={"Số người đang có"}
+                       onChange={(e) => form.setValue("slot", e.target.value)}
+                />
+            </Box>
+            <Box mt={6}>
+                <Input type={"number"}
+                       label={"Còn thiếu"}
+                       helperText={"Số người còn thiếu"}
+                       onChange={(e) => form.setValue("vacancy", e.target.value)}
+                />
+            </Box>
+            <Box mt={6}>
+                <Input type={"text"}
+                       label={"Chú thích"}
+                       onChange={(e) => form.setValue("note", e.target.value)}
+                />
+            </Box>
+            <Box mt={6}>
+                <Button style={{marginInline: "auto"}}
+                        onClick={form.handleSubmit((validated) => {
+                            mutation.mutate(validated);
+                        })}
+                >Gửi</Button>
+            </Box>
         </div>
-    </Container>
+    </Page>
 }
 
 export default RegisterForm;

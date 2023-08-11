@@ -3,7 +3,10 @@ import axios from "axios";
 
 export interface MatchRegister {
     name: string
-
+    location: string
+    note: string
+    slot: number
+    vacancy: number
 }
 
 function buildFormData(o: Object) {
@@ -21,13 +24,14 @@ function buildFormData(o: Object) {
 function sendRegisterForm(data: MatchRegister) {
     const url = `${import.meta.env.VITE_ROOT_URL}/api/register`;
     const formData = buildFormData(data);
+    console.log({...formData})
     return axios.post<string>(url, formData, {
         headers: {"Content-Type": "application/x-www-form-urlencoded"}
     })
 }
 
 function useSendRegister() {
-    return useMutation({
+    return useMutation<unknown, unknown, MatchRegister, unknown>({
         mutationFn: sendRegisterForm
     })
 }

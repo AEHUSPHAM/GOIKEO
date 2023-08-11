@@ -7,14 +7,8 @@ const Layout: React.FC = () => {
     return <>
         <Outlet/>
         <BottomNavigation fixed
-                          defaultActiveKey={"sender"}
                           activeKey={activeKey}
-                          style={{
-                              position: "fixed",
-                              bottom: 0
-                          }}
                           onChange={(key) => {
-                              console.log(key);
                               setActiveKey(key);
                           }}
         >
