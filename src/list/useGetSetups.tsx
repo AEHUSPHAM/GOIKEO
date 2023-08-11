@@ -9,9 +9,21 @@ export interface Setup {
 
 async function fetchSetup() {
     return Promise.resolve([{
-        name : "hi",
-        location : "quan 3",
-        time : "10h30p"
+        name: "hi",
+        location: "quan 3",
+        time: "10h30p"
+    }, {
+        name: "hi",
+        location: "quan 3",
+        time: "10h30p"
+    }, {
+        name: "hi",
+        location: "quan 3",
+        time: "10h30p"
+    }, {
+        name: "hi",
+        location: "quan 3",
+        time: "10h30p"
     }]);
     // return await axios.get<Setup[]>("").then(value => value.data)
 }
