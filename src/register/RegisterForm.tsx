@@ -1,35 +1,48 @@
-import React from "react";
-import {Button, Container, Form} from "react-bootstrap";
+import React, {useEffect} from "react";
+import {Container} from "react-bootstrap";
+import {Box, Button, DatePicker, Input} from "zmp-ui";
+import {useForm} from "react-hook-form";
+import {MatchRegister} from "./useSendRegister";
+import {deDE, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
 const RegisterForm: React.FC = () => {
+    const form = useForm<MatchRegister>()
+    useEffect(() => {
+
+    })
     return <Container>
         <div style={{textAlign: "center"}}>
             <h1>Hi</h1>
         </div>
-        <Form style={{maxWidth: "30rem", marginInline: "auto"}}>
-            <Form.Group className="mb-3">
-                <Form.Label htmlFor="name">Tên</Form.Label>
-                <Form.Control id="name" placeholder="Tên kèo"/>
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label htmlFor="disabledSelect">Disabled select menu</Form.Label>
-                <Form.Select id="disabledSelect">
-                    <option>Disabled select</option>
-                </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Check
-                    type="checkbox"
-                    id="disabledFieldsetCheck"
-                    label="Can't check this"
+        <div style={{maxWidth: "30rem", justifyContent: "center", marginInline: "auto"}}>
+            {/*<FormControl {...form.register("name")}/>*/}
+            <Box>
+                <Input placeholder={"hello"}
+                       onChange={(e) => form.setValue("name", e.target.value)} label={"Tên kèo"}
+                       helperText={"Tên kèo nhé bạn"} clearable/>
+            </Box>
+            <Box mt={6}>
+                <DatePicker
+                    label="Ngày giờ"
+                    helperText="Ngày giờ gặp nhau nhé"
+                    mask
+                    maskClosable
+                    dateFormat="dd/mm/yyyy"
+                    title="DatePicker"
                 />
-            </Form.Group>
-            <div style={{
-                marginInline: "auto"
-            }}>
-                <Button type="submit">Submit</Button>
-            </div>
-        </Form>
+                <LocalizationProvider
+                    dateAdapter={AdapterDayjs}
+                    localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
+                >
+                    <TimePicker/>
+                </LocalizationProvider>;
+            </Box>
+            <Button onClick={event => {
+                let values = form.getValues();
+                console.log(values)
+            }}>click</Button>
+        </div>
     </Container>
 }
 

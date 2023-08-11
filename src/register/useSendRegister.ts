@@ -1,7 +1,8 @@
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
 
-interface MatchRegister {
+export interface MatchRegister {
+    name: string
 
 }
 
