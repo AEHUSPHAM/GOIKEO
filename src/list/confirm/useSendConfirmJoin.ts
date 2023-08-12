@@ -1,21 +1,18 @@
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
 import {RequestJoinForm} from "./ConfirmModal";
-import {buildFormData} from "../../register/useSendRegister";
 
 function postConfirm(data: RequestJoinForm) {
-    const confirmation = buildFormData(data)
-    const id = data.id
     // TODO
-    return axios.post<{}>("", confirmation, {
-        headers: {"Content-Type": "application/x-www-form-urlencoded"}
+    return axios.post<{}>(`${import.meta.env.VITE_ROOT_URL}/api/join`, data, {
+        headers: {"Content-Type": "application/json"}
     }).then(value => value.data)
 }
 
-function useSendConfirm() {
+function useSendConfirmJoin() {
     return useMutation<unknown, unknown, RequestJoinForm, unknown>({
         mutationFn: postConfirm
     })
 }
 
-export default useSendConfirm;
+export default useSendConfirmJoin;

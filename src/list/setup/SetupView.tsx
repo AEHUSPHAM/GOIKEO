@@ -1,35 +1,45 @@
 import React, {useState} from "react";
-import {Avatar, Box, Button} from "zmp-ui";
-import useGetSetups, {Setup} from "./useGetSetups";
-import useSendConfirm from "../confirm/useSendConfirm";
+import {Avatar, Box, Button, Spinner} from "zmp-ui";
+import {Setup} from "./useGetSetups";
+import useSendConfirmJoin from "../confirm/useSendConfirmJoin";
 import ConfirmModal from "../confirm/ConfirmModal";
+import {UserContext} from "../../ProtectedRoute";
 
 const SetupView: React.FC<{ data: Setup }> = ({data}) => {
     const [visible, setVis] = useState<boolean>(false);
-    const sendConfirm = useSendConfirm()
-    const setupsQuery = useGetSetups();
+    const sendConfirm = useSendConfirmJoin()
+    const userDetails = React.useContext(UserContext);
+
+    if (!data) {
+        return <Spinner/>
+    }
+
+    console.log(data.subcriptions)
+    console.log(userDetails)
+
+    const isMine = data.subcriptions.find(value => value.user_id === userDetails?.id) !== undefined
     return <>
         <Box flex style={{
             justifyContent: "space-between",
             alignItems: "center"
         }}>
-            <Avatar/>
+            <Avatar src={JSON.parse(data.owner.picture).data.url}/>
             <div style={{
                 textAlign: "center",
             }}>
-                <div><strong>{data.name}</strong></div>
+                <div><strong>{data.title}</strong></div>
                 <div className={"d-flex justify-content-around"}>
                     <div>{data.location}</div>
                     <span>-</span>
                     <div>{data.time}</div>
                 </div>
             </div>
-            <Button size={"small"} variant={"secondary"} onClick={() => setVis(true)}>Tham gia</Button>
+            {isMine ? "Host" :
+                <Button size={"small"} variant={"secondary"} onClick={() => setVis(true)}>Tham gia</Button>}
         </Box>
         <ConfirmModal visible={visible} onClose={() => setVis(false)} submitAction={async validated => {
-            await sendConfirm.mutateAsync({...validated, id: data.id})
+            await sendConfirm.mutateAsync({...validated, item_id: data.id})
             setVis(false)
-            await setupsQuery.refetch()
         }}/>
     </>;
 }

@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import {Avatar, Box, Button} from "zmp-ui";
 import CancelModal from "../cancel/CancelModal";
-import {Setup} from "./useGetSetups";
 import useSendCancel from "../cancel/useSendCancel";
+import {showToast} from "zmp-sdk";
+import {MySetUp} from "./useGetMySetups";
 
-const JoinedSetupView: React.FC<{ data: Setup }> = ({data}) => {
+const JoinedSetupView: React.FC<{ data: MySetUp }> = ({data}) => {
     const [visible, setVis] = useState<boolean>(false);
     const sendCancel = useSendCancel()
     return <>
@@ -12,11 +13,11 @@ const JoinedSetupView: React.FC<{ data: Setup }> = ({data}) => {
             justifyContent: "space-between",
             alignItems: "center"
         }}>
-            <Avatar/>
+            <Avatar src={JSON.parse(data.owner.picture).data.url}/>
             <div style={{
                 textAlign: "center",
             }}>
-                <div><strong>{data.name}</strong></div>
+                <div><strong>{data.title}</strong></div>
                 <div className={"d-flex justify-content-around"}>
                     <div>{data.location}</div>
                     <span>-</span>
@@ -25,18 +26,24 @@ const JoinedSetupView: React.FC<{ data: Setup }> = ({data}) => {
             </div>
             <div>
                 <div style={{textAlign: "center"}}>
-                    <span>{data.slot - data.vacancy}</span>
+                    <span>{data.max_participants - 0}</span>
                     <span>/</span>
-                    <span>{data.slot}</span>
+                    <span>{data.max_participants}</span>
                 </div>
-                <Button size={"small"} variant={"secondary"} onClick={event => {
+                {data.is_active ? <Button type={"danger"} size={"small"} variant={"secondary"} onClick={event => {
                     setVis(true);
-                }}>Hủy kèo</Button>
+                }}>Hủy kèo</Button> : <span>Đã hủy</span>}
             </div>
         </Box>
         <CancelModal visible={visible} onClose={() => setVis(false)} submitAction={async () => {
-            await sendCancel.mutateAsync(data.id)
-            setVis(false)
+            try {
+                await sendCancel.mutateAsync(data.id)
+                showToast({message: "thành công"})
+            } catch (ex) {
+                showToast({message: "thất bại"})
+            } finally {
+                setVis(false)
+            }
         }}/>
     </>;
 }

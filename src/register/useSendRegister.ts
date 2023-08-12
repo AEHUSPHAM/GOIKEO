@@ -1,12 +1,12 @@
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
-import {RequestJoinForm} from "../list/confirm/ConfirmModal";
 
 export interface MatchRegister {
-    name: string
+    title: string
+    type: string
     location: string
-    note: string
-    slot: number
+    description: string
+    max_participants: number
     vacancy: number
 }
 
@@ -24,10 +24,8 @@ export function buildFormData(o: Object) {
 
 function sendRegisterForm(data: MatchRegister) {
     const url = `${import.meta.env.VITE_ROOT_URL}/api/register`;
-    const formData = buildFormData(data);
-    console.log({...formData})
-    return axios.post<string>(url, formData, {
-        headers: {"Content-Type": "application/x-www-form-urlencoded"}
+    return axios.post<string>(url, data, {
+        headers: {"Content-Type": "application/json"}
     })
 }
 

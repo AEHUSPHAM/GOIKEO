@@ -1,60 +1,40 @@
 import {useQuery} from "@tanstack/react-query";
+import axios from "axios";
+
+
+export interface Owner {
+    id: string,
+    name: string,
+    picture: string
+}
+
+export interface Subscription {
+    user_id: string
+    status: string
+}
 
 export interface Setup {
-    id: string;
-    name: string
+    id: string
+    owner: Owner
+    title: string
     location: string
     time: string
-    slot: number
-    vacancy: number
-    avatar: string | undefined
+    max_participants: number
+    subcriptions: Subscription[]
 }
 
-const DATA: Setup[] = [{
-    id: "1",
-    name: "hi",
-    location: "quan 3",
-    time: "10h30p",
-    avatar: undefined,
-    slot: 10,
-    vacancy: 3
-}, {
-    id: "2",
-    name: "hi",
-    location: "quan 3",
-    time: "10h30p",
-    avatar: undefined,
-    slot: 14,
-    vacancy: 1
-}, {
-    id: "3",
-    name: "hi",
-    location: "quan 3",
-    time: "10h30p",
-    avatar: undefined,
-    slot: 10,
-    vacancy: 3
-}, {
-    id: "4",
-    name: "hi",
-    location: "quan 3",
-    time: "10h30p",
-    avatar: undefined,
-    slot: 20,
-    vacancy: 3
-}];
-
-async function fetchSetup() {
-    return Promise.resolve(DATA);
-    // return await axios.get<Setup[]>("").then(value => value.data)
+async function fetchSetup(filter: string | undefined) {
+    // return Promise.resolve(DATA);
+    return await axios.get<Setup[]>(`${import.meta.env.VITE_ROOT_URL}/items`).then(value => value.data)
 }
 
-function useGetSetups() {
+function useGetSetups(filter: string | undefined) {
     return useQuery<Setup[], unknown>(
-        ["fetch-setups"],
-        () => fetchSetup(),
+        ["fetch-setups", filter],
+        () => fetchSetup(filter),
         {
-            staleTime: Infinity,
+            staleTime: 2000,
+            refetchInterval: 1000
         }
     );
 }

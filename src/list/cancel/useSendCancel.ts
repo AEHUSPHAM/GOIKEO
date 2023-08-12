@@ -2,8 +2,7 @@ import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
 
 function postCancel(id: string) {
-    // TODO
-    return axios.post<{}>("").then(value => value.data)
+    return axios.post<{}>(`${import.meta.env.VITE_ROOT_URL}/api/cancel?item_id=${id}`).then(value => value.data)
 }
 
 function useSendCancel() {

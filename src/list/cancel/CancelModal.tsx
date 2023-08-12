@@ -21,7 +21,7 @@ const CancelModal: React.FC<{ visible: boolean, onClose: () => void, submitActio
                 onClick: submitAction
             },
         ]}
-        description="Hãy để lại lời nhắn với chủ kèo"/>
+        description="Bạn có chắc muốn hủy kèo?"/>
 }
 
 export default CancelModal;
