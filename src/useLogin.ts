@@ -12,7 +12,7 @@ const useLogin = () => {
         mutationKey: ["login"],
         mutationFn: async token => {
             let url = new URL(`${import.meta.env.VITE_ROOT_URL}/users/me`);
-            const data = await axios.get<{}, UserProfile>(url.toString(), {
+            const {data} = await axios.get<{}, UserProfile>(url.toString(), {
                 headers: {
                     'token': token
                 }

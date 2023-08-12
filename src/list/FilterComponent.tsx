@@ -15,7 +15,7 @@ const ItemWrapper: React.FC<{
     filter: string | undefined,
     setFilter: (filter: string | undefined) => void
 } & PropsWithChildren> = ({name, filter, setFilter, children}) => {
-    return <ListGroup.Item style={{cursor: "pointer"}}
+    return <ListGroup.Item className="border-0 rounded" style={{cursor: "pointer"}}
                            active={filter === name}
                            onClick={() => {
                                if (filter === name) setFilter(undefined)

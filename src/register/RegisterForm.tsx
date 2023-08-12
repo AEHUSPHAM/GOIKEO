@@ -1,5 +1,6 @@
-import React from "react";
-import {Box, Button, DatePicker, Input, Page} from "zmp-ui";
+import React, {useState} from "react";
+import {Box, Button, DatePicker, Input, Page, Select} from "zmp-ui";
+
 import {Controller, useForm} from "react-hook-form";
 import useSendRegister, {MatchRegister} from "./useSendRegister";
 import {LocalizationProvider, MobileTimePicker} from "@mui/x-date-pickers";
@@ -7,7 +8,11 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import 'dayjs/locale/vi';
 
 
+const {OtpGroup, Option} = Select;
+
+
 const RegisterForm: React.FC = () => {
+    const [datetime, setDatetime] = useState<Date>(undefined);
     const form = useForm<MatchRegister>({
         mode: "onChange"
     })
@@ -54,29 +59,64 @@ const RegisterForm: React.FC = () => {
                                  fieldState: {invalid, isTouched, isDirty, error},
                                  formState,
                              }) => (
-                        <Input
+                        <Select
                             value={value}
-                            onBlur={onBlur}
-                            onChange={onChange}
-                            label={"Loại"}
-                            helperText={"Nhập bộ môn bạn đang chơi nhé"}
+                            label="Loại bộ môn"
+                            helperText="Nhập bộ môn bạn muốn chơi nhé"
+                            errorText={form.formState.errors.type?.message}
                             status={form.formState.errors.title !== undefined ? "error" : "success"}
-                            errorText={form.formState.errors.title?.message}
-                            clearable/>
+                            onChange={selected => {
+                                onChange(selected);
+                            }}
+                        >
+                            <Option value="swim" title="Bơi"/>
+                            <Option value="basketball" title="Bóng rổ"/>
+                            <Option value="soccer" title="Bóng đá"/>
+                            <Option value="badminton" title="Cầu lông"/>
+                            <Option value="khác" title="Khác"/>
+                        </Select>
                     )}
                 />
             </Box>
             <Box mt={6}>
-                <DatePicker/>
-                <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                    adapterLocale="vi"
-                >
-                    <MobileTimePicker onChange={value => {
-                        console.log(value["$H"]);
-                        console.log(value["$m"]);
-                    }}/>
-                </LocalizationProvider>
+                <Controller
+                    control={form.control}
+                    name="type"
+                    rules={{
+                        required: "Điền vào field này nhé",
+                    }}
+                    render={({
+                                 field: {onChange, onBlur, value},
+                                 fieldState: {invalid, isTouched, isDirty, error},
+                                 formState,
+                             }) => (
+                        <>
+                            <div>Nhập thời gian</div>
+                            <LocalizationProvider
+                                dateAdapter={AdapterDayjs}
+                                adapterLocale="vi"
+                            >
+                                <MobileTimePicker onChange={value => {
+                                    setDatetime(prevState => {
+                                        let newDate = {
+                                            ...prevState,
+                                        };
+                                        newDate.setHours(value["$H"])
+                                        newDate.setMinutes(value["$m"])
+                                        return newDate
+                                    })
+                                }}/>
+                            </LocalizationProvider>
+                            <DatePicker dateTimePicker={true}
+                                        helperText={"Nhập thời gian"}
+                                        errorText={form.formState.errors.type?.message}
+                                        onChange={value1 => {
+
+                                        }}
+                                        status={form.formState.errors.title !== undefined ? "error" : "success"}/>
+                        </>
+                    )}
+                />
             </Box>
             <Box mt={6}>
                 <Controller

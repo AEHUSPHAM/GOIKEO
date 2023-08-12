@@ -18,7 +18,7 @@ export interface Setup {
     owner: Owner
     title: string
     location: string
-    time: string
+    created_time: string
     max_participants: number
     subcriptions: Subscription[]
 }

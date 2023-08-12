@@ -14,33 +14,32 @@ const SetupView: React.FC<{ data: Setup }> = ({data}) => {
         return <Spinner/>
     }
 
-    console.log(data.subcriptions)
+    console.log(data.owner.id)
     console.log(userDetails)
 
-    const isMine = data.subcriptions.find(value => value.user_id === userDetails?.id) !== undefined
+    const hasJoined = data.subcriptions.find(value => value.user_id === userDetails?.id) !== undefined
+    const isMine = data.owner.id === userDetails?.id
     return <>
         <Box flex style={{
-            justifyContent: "space-between",
             alignItems: "center"
         }}>
             <Avatar src={JSON.parse(data.owner.picture).data.url}/>
-            <div style={{
-                textAlign: "center",
-            }}>
-                <div><strong>{data.title}</strong></div>
-                <div className={"d-flex justify-content-around"}>
-                    <div>{data.location}</div>
-                    <span>-</span>
-                    <div>{data.time}</div>
-                </div>
+            <div style={{textAnchor: "start", marginLeft : "3rem"}}>
+                <div>Tên <strong>{data.title}</strong></div>
+                <div>Địa điểm <strong>{data.location}</strong></div>
+                <div>Thời điểm <strong>{data.created_time}</strong></div>
             </div>
-            {isMine ? "Host" :
-                <Button size={"small"} variant={"secondary"} onClick={() => setVis(true)}>Tham gia</Button>}
+            <div style={{marginLeft: "auto"}}>
+                {isMine ? <span>Host</span> :
+                    (hasJoined ? <span>Đã tham gia</span> :
+                        <Button size={"small"} variant={"secondary"} onClick={() => setVis(true)}>Tham gia</Button>)}
+            </div>
         </Box>
-        <ConfirmModal visible={visible} onClose={() => setVis(false)} submitAction={async validated => {
-            await sendConfirm.mutateAsync({...validated, item_id: data.id})
-            setVis(false)
-        }}/>
+        <ConfirmModal visible={visible} onClose={() => setVis(false)}
+                      submitAction={async validated => {
+                          await sendConfirm.mutateAsync({...validated, item_id: data.id})
+                          setVis(false)
+                      }}/>
     </>;
 }
 
