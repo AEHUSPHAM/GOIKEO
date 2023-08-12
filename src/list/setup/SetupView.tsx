@@ -14,17 +14,16 @@ const SetupView: React.FC<{ data: Setup }> = ({data}) => {
         return <Spinner/>
     }
 
-    console.log(data.owner.id)
-    console.log(userDetails)
-
     const hasJoined = data.subcriptions.find(value => value.user_id === userDetails?.id) !== undefined
     const isMine = data.owner.id === userDetails?.id
     return <>
         <Box flex style={{
             alignItems: "center"
         }}>
-            <Avatar src={JSON.parse(data.owner.picture).data.url}/>
-            <div style={{textAnchor: "start", marginLeft : "3rem"}}>
+            <div style={{width: "5rem"}}>
+                <Avatar src={JSON.parse(data.owner.picture).data.url}/>
+            </div>
+            <div style={{textAnchor: "start", marginLeft: "3rem"}}>
                 <div>Tên <strong>{data.title}</strong></div>
                 <div>Địa điểm <strong>{data.location}</strong></div>
                 <div>Thời điểm <strong>{data.created_time}</strong></div>

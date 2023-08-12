@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Box, Button, DatePicker, Input, Page, Select} from "zmp-ui";
 
 import {Controller, useForm} from "react-hook-form";
@@ -6,21 +6,34 @@ import useSendRegister, {MatchRegister} from "./useSendRegister";
 import {LocalizationProvider, MobileTimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import 'dayjs/locale/vi';
+import {showToast} from "zmp-sdk";
 
 
-const {OtpGroup, Option} = Select;
+const {Option} = Select;
 
+function getDefaultTime() {
+    const now = new Date();
+    let formattedNow = {
+        date: now.getDate(),
+        month: now.getMonth(),
+        year: now.getFullYear(),
+
+        hour: now.getHours(),
+        minute: now.getMinutes(),
+    };
+    return formattedNow
+}
 
 const RegisterForm: React.FC = () => {
-    const [datetime, setDatetime] = useState<Date>(undefined);
     const form = useForm<MatchRegister>({
         mode: "onChange"
     })
     const mutation = useSendRegister();
-    return <Page className={"section-container"} style={{height: "80%", overflowY: "scroll"}}
+
+    return <Page className={"section-container-full"} style={{overflowY: "scroll"}}
     >
         <div style={{textAlign: "center"}}>
-            <h1>Hi</h1>
+            <h1>Tạo Kèo</h1>
         </div>
         <div style={{maxWidth: "30rem", justifyContent: "center", marginInline: "auto"}}>
             <Box>
@@ -73,7 +86,7 @@ const RegisterForm: React.FC = () => {
                             <Option value="basketball" title="Bóng rổ"/>
                             <Option value="soccer" title="Bóng đá"/>
                             <Option value="badminton" title="Cầu lông"/>
-                            <Option value="khác" title="Khác"/>
+                            <Option value="other" title="Khác"/>
                         </Select>
                     )}
                 />
@@ -81,42 +94,44 @@ const RegisterForm: React.FC = () => {
             <Box mt={6}>
                 <Controller
                     control={form.control}
-                    name="type"
+                    name="time"
                     rules={{
                         required: "Điền vào field này nhé",
                     }}
+                    defaultValue={getDefaultTime()}
                     render={({
                                  field: {onChange, onBlur, value},
                                  fieldState: {invalid, isTouched, isDirty, error},
                                  formState,
                              }) => (
                         <>
-                            <div>Nhập thời gian</div>
-                            <LocalizationProvider
-                                dateAdapter={AdapterDayjs}
-                                adapterLocale="vi"
-                            >
-                                <MobileTimePicker onChange={value => {
-                                    setDatetime(prevState => {
-                                        let newDate = {
-                                            ...prevState,
-                                        };
-                                        newDate.setHours(value["$H"])
-                                        newDate.setMinutes(value["$m"])
-                                        return newDate
-                                    })
-                                }}/>
-                            </LocalizationProvider>
-                            <DatePicker dateTimePicker={true}
-                                        helperText={"Nhập thời gian"}
-                                        errorText={form.formState.errors.type?.message}
-                                        onChange={value1 => {
-
-                                        }}
-                                        status={form.formState.errors.title !== undefined ? "error" : "success"}/>
+                            <span style={{fontSize : "14px"}}>Nhập thời gian</span>
+                            <div className={"d-flex justify-content-around"}>
+                                <DatePicker helperText={"Nhập thời gian"}
+                                            errorText={form.formState.errors.type?.message}
+                                            defaultValue={new Date()}
+                                            onChange={change => {
+                                                form.setValue("time.date", change.getDate())
+                                                form.setValue("time.month", change.getMonth())
+                                                form.setValue("time.year", change.getUTCFullYear())
+                                            }}
+                                            status={form.formState.errors.time !== undefined ? "error" : "success"}/>
+                                <div style={{marginLeft: "1rem"}}>
+                                    <LocalizationProvider
+                                        dateAdapter={AdapterDayjs}
+                                        adapterLocale="vi"
+                                    >
+                                        <MobileTimePicker onChange={value => {
+                                            form.setValue("time.hour", value["$H"])
+                                            form.setValue("time.minute", value["$H"])
+                                        }}/>
+                                    </LocalizationProvider>
+                                </div>
+                            </div>
                         </>
                     )}
                 />
+
             </Box>
             <Box mt={6}>
                 <Controller
@@ -193,11 +208,11 @@ const RegisterForm: React.FC = () => {
                        onChange={(e) => form.setValue("note", e.target.value)}
                 />
             </Box>
-            <Box mt={6}>
+            <Box mt={6} flex>
                 <Button style={{marginInline: "auto"}}
-                        onClick={form.handleSubmit((validated) => {
-                            console.log(form.formState.errors.title?.message)
-                            mutation.mutate(validated);
+                        onClick={form.handleSubmit(async (validated) => {
+                            await mutation.mutateAsync(validated);
+                            showToast({message: "success"})
                         })}
                 >Gửi</Button>
             </Box>

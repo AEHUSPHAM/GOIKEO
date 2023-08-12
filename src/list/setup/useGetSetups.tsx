@@ -25,7 +25,9 @@ export interface Setup {
 
 async function fetchSetup(filter: string | undefined) {
     // return Promise.resolve(DATA);
-    return await axios.get<Setup[]>(`${import.meta.env.VITE_ROOT_URL}/items`).then(value => value.data)
+    let url = `${import.meta.env.VITE_ROOT_URL}/items`;
+    if (filter) url = url + `?sport=${filter}`
+    return await axios.get<Setup[]>(url).then(value => value.data)
 }
 
 function useGetSetups(filter: string | undefined) {

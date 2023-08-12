@@ -13,7 +13,9 @@ const JoinedSetupView: React.FC<{ data: MySetUp }> = ({data}) => {
             justifyContent: "space-between",
             alignItems: "center"
         }}>
-            <Avatar src={JSON.parse(data.owner.picture).data.url}/>
+            <div style={{width: "5rem"}}>
+                <Avatar src={JSON.parse(data.owner.picture).data.url}/>
+            </div>
             <div style={{
                 textAlign: "center",
             }}>

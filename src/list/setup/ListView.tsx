@@ -14,11 +14,10 @@ const ListView: React.FC = () => {
             data={el}/></List.Item>
     })
     return <Page>
-        <Container>
             <section id={"list-header"} className={"section-container"}>
                 <FilterComponent filter={filter} setFilter={setFilter}/>
             </section>
-            <section id={"list-body"} className={"section-container"}>
+            <section id={"list-body"} className={"section-container-full"}>
                 <div className={"h3"}>Danh sách kèo thơm</div>
                 <List style={{
                     justifyContent: "center",
@@ -27,7 +26,6 @@ const ListView: React.FC = () => {
                     overflowY: "scroll"
                 }}>{view}</List>
             </section>
-        </Container>
     </Page>
 }
 export default ListView

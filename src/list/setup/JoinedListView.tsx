@@ -1,6 +1,5 @@
 import React from "react";
 import {List, Page} from "zmp-ui";
-import {Container} from "react-bootstrap";
 import JoinedSetupView from "./JoinedSetupView";
 import useMyGetSetups from "./useGetMySetups";
 
@@ -12,12 +11,10 @@ const JoinedListView: React.FC = () => {
             data={el}/></List.Item>
     })
     return <Page>
-        <Container>
-            <section id={"list-body"} className={"section-container"}>
-                <div className={"h3"}>Kèo đã tạo</div>
-                <List style={{justifyContent: "center", alignItems: "center"}}>{view}</List>
-            </section>
-        </Container>
+        <section id={"list-body"} className={"section-container-full"}>
+            <div className={"h3"}>Kèo đã tạo</div>
+            <List style={{justifyContent: "center", alignItems: "center"}}>{view}</List>
+        </section>
     </Page>
 }
 export default JoinedListView;
