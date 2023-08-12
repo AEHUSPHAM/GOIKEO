@@ -5,6 +5,7 @@ import useSendRegister, {MatchRegister} from "./useSendRegister";
 import {LocalizationProvider, MobileTimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import 'dayjs/locale/vi';
+import ConfirmModal from "../list/confirm/ConfirmModal";
 
 
 const RegisterForm: React.FC = () => {
@@ -14,6 +15,7 @@ const RegisterForm: React.FC = () => {
     const mutation = useSendRegister();
     return <Page className={"section-container"}
     >
+        <ConfirmModal/>
         <div style={{textAlign: "center"}}>
             <h1>Hi</h1>
         </div>

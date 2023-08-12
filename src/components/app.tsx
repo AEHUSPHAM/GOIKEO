@@ -5,7 +5,8 @@ import {Route} from "react-router-dom";
 import Layout from "../Layout";
 import RegisterForm from "../register/RegisterForm";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import ListView from "../list/ListView";
+import ListView from "../list/setup/ListView";
+import JoinedListView from "../list/setup/JoinedListView";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -26,6 +27,7 @@ const MyApp = () => {
                                 <Route path={"/"} element={<Layout/>}>
                                     <Route index element={<RegisterForm/>}/>
                                     <Route path={"/receiver"} element={<ListView/>}/>
+                                    <Route path={"/joined"} element={<JoinedListView/>}/>
                                 </Route>
                             </AnimationRoutes>
                         </ZMPRouter>

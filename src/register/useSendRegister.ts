@@ -1,5 +1,6 @@
 import {useMutation} from "@tanstack/react-query";
 import axios from "axios";
+import {RequestJoinForm} from "../list/confirm/ConfirmModal";
 
 export interface MatchRegister {
     name: string
@@ -9,7 +10,7 @@ export interface MatchRegister {
     vacancy: number
 }
 
-function buildFormData(o: Object) {
+export function buildFormData(o: Object) {
     const formData = new FormData();
     for (const [key, value] of Object.entries(o)) {
         if (typeof value === "string" || value instanceof Blob) {
